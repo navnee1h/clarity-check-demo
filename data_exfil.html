@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clarity Data Stream</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --sidebar: #161b22;
+            --border: #30363d;
+            --blue: #58a6ff;
+            --green: #7ee787;
+            --purple: #bc8cff;
+            --text: #c9d1d9;
+            --text-dim: #8b949e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar: Singular Targeted Stream */
+        aside {
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .log-card {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .log-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: #30363d;
+        }
+
+        .log-card.active {
+            border-color: var(--blue);
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        .tag {
+            display: inline-block;
+            width: 32px;
+            font-weight: 900;
+            margin-right: 8px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .tag-req {
+            color: var(--purple);
+        }
+
+        .tag-res {
+            color: var(--green);
+        }
+
+        .ev-name {
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .preview {
+            font-size: 11px;
+            color: #8b949e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            margin-top: 6px;
+        }
+
+        /* Viewer: Full JSON Body */
+        main {
+            display: flex;
+            flex-direction: column;
+            background: #010409;
+            overflow: hidden;
+        }
+
+        #viewer {
+            flex: 1;
+            overflow: auto;
+            padding: 30px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Syntax Color Pallete */
+        .k {
+            color: #79c0ff;
+        }
+
+        .s {
+            color: #a5d6ff;
+        }
+
+        .n {
+            color: #ffa657;
+        }
+
+        .b {
+            color: #d2a8ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <div class="log-container" id="log-list"></div>
+    </aside>
+
+    <main>
+        <div id="viewer">// Performing automated background discovery...</div>
+    </main>
+
+    <script>
+        const logList = document.getElementById('log-list');
+        const viewer = document.getElementById('viewer');
+        let currentData = null;
+
+        const TARGET_EVENTS = ["clarity_fetch_account_status", "clarity_fetch_payload", "clarity_fetch_heatmap"];
+
+        function paint(obj) {
+            if (typeof obj != 'string') obj = JSON.stringify(obj, null, 2);
+            obj = obj.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return obj.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (m) {
+                let cls = 'n';
+                if (/^"/.test(m)) {
+                    if (/:$/.test(m)) cls = 'k'; else cls = 's';
+                } else if (/true|false/.test(m)) cls = 'b';
+                return '<span class="' + cls + '">' + m + '</span>';
+            });
+        }
+
+        function addLog(type, event, data) {
+            // FILTER: Only show specified targeted events in the sidebar
+            if (!TARGET_EVENTS.includes(event)) return;
+
+            const card = document.createElement('div');
+            card.className = 'log-card';
+            card.innerHTML = `
+            <span class="tag tag-${type.toLowerCase()}">${type}</span>
+            <span class="ev-name">${event}</span>
+            <span class="preview">${JSON.stringify(data)}</span>
+        `;
+            card.onclick = () => {
+                document.querySelectorAll('.log-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                currentData = data;
+                viewer.innerHTML = paint(data);
+            };
+            logList.prepend(card);
+            card.click();
+        }
+
+        // --- NON-FILTERING AUTO-ENGINE ---
+        const wait = (ms) => new Promise(res => setTimeout(res, ms));
+
+        // INTERCEPT OUTGOING REQUESTS
+        window.addEventListener("fetch_clarity_api_request", (e) => {
+            addLog('REQ', e.detail.event, e.detail);
+        });
+
+        // INTERCEPT INCOMING RESPONSES
+        window.addEventListener("fetch_clarity_api_response", async (e) => {
+            const evType = e.detail.event;
+            let res;
+            try {
+                res = (typeof e.detail.response === 'string') ? JSON.parse(e.detail.response) : e.detail.response;
+            } catch (err) {
+                res = { raw_bridge_string: e.detail.response, parse_error: err.message };
+            }
+
+            addLog('RES', evType, res);
+
+            // CHAIN LOGIC
+            if (res?.data?.accountStatus) {
+                await wait(1500);
+                const p = res.data.accountStatus.userData.membershipInfo.projects[0].project;
+                const range = { start: new Date(Date.now() - 604800000).toISOString(), end: new Date().toISOString() };
+                [0, 2].forEach(dev => {
+                    window.dispatchEvent(new CustomEvent("fetch_clarity_api_request", {
+                        detail: { event: "clarity_fetch_recording", projectId: p.id, href: p.hostname, device: dev, timeInterval: range, limit: 10 }
+                    }));
+                });
+                window.dispatchEvent(new CustomEvent("fetch_clarity_api_request", {
+                    detail: { event: "clarity_fetch_heatmap", projectId: p.id, href: p.hostname, timeInterval: range }
+                }));
+            }
+            else if (Array.isArray(res) && res.length > 0 && res[0].sessionId) {
+                await wait(1500);
+                // SINGULAR TARGET: Only request payload for THE MOST RECENT session
+                const s = res[0];
+                window.dispatchEvent(new CustomEvent("fetch_clarity_api_request", {
+                    detail: { event: "clarity_fetch_payload", projectId: s.projectId, userId: s.userId, sessionId: s.sessionId, pageNum: 1 }
+                }));
+            }
+        });
+
+        window.onload = () => {
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent("fetch_clarity_api_request", {
+                    detail: { event: "clarity_fetch_account_status" }
+                }));
+            }, 1500);
+        };
+
+    </script>
+</body>
+
+</html>
