@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Nexus | Sovereign AI Infrastructure</title>
+    <script type="text/javascript">
+      (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+          (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "vyrj29l5mo");
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+      :root {
+        --bg-dark: #050505;
+        --card-bg: #0f1115;
+        --primary-blue: #0070f3;
+        --primary-cyan: #50e3c2;
+        --text-main: #ffffff;
+        --text-muted: #888888;
+        --border: #333333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        overflow-x: hidden;
+        line-height: 1.5;
+      }
+
+      /* Gradient Glow Backgrounds */
+      .glow-top {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 400px;
+        background: radial-gradient(circle, rgba(0, 112, 243, 0.15) 0%, transparent 70%);
+        z-index: -1;
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem 8%;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        background: rgba(5, 5, 5, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
+      }
+
+      .logo {
+        font-weight: 800;
+        font-size: 1.4rem;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 40px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        transition: 0.3s;
+      }
+
+      .nav-links a:hover {
+        color: var(--text-main);
+      }
+
+      /* Hero Section */
+      header {
+        padding: 180px 8% 100px 8%;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        color: var(--primary-cyan);
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 8vw, 5rem);
+        font-weight: 800;
+        letter-spacing: -2px;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #fff, #888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .subtext {
+        color: var(--text-muted);
+        max-width: 650px;
+        font-size: 1.2rem;
+        margin-bottom: 3rem;
+      }
+
+      .btn-primary {
+        background: var(--text-main);
+        color: black;
+        padding: 16px 36px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      /* Feature Section */
+      .section-padding {
+        padding: 120px 8%;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .section-sub {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 4rem;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .feature-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        padding: 40px;
+        border-radius: 16px;
+        transition: 0.4s;
+        cursor: pointer;
+      }
+
+      .feature-card:hover {
+        border-color: var(--primary-blue);
+      }
+
+      .feature-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .feature-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      /* Pricing Section */
+      .pricing-table {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 50px;
+      }
+
+      .price-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        padding: 40px;
+        width: 320px;
+        border-radius: 20px;
+        position: relative;
+      }
+
+      .price-card.popular {
+        border-color: var(--primary-cyan);
+      }
+
+      .price-card.popular::after {
+        content: "MOST POPULAR";
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        background: var(--primary-cyan);
+        color: black;
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 800;
+      }
+
+      .price-amount {
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 20px 0;
+      }
+
+      .price-features {
+        list-style: none;
+        color: var(--text-muted);
+        margin-bottom: 30px;
+        font-size: 0.9rem;
+      }
+
+      .price-features li {
+        margin-bottom: 12px;
+      }
+
+      /* Contact Form */
+      .contact-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 50px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        background: #1a1a1a;
+        border: 1px solid var(--border);
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        outline: none;
+      }
+
+      /* Footer */
+      footer {
+        padding: 80px 8%;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+      }
+
+      /* Analytics Demo Styles */
+      #status-msg {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        height: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow-top"></div>
+    <nav>
+      <div class="logo">LUMINA NEXUS</div>
+      <div class="nav-links">
+        <a href="#features">Capabilities</a>
+        <a href="#pricing">Compute</a>
+        <a href="#contact">Contact</a>
+        <a href="#" style="color: var(--primary-cyan)">Sign In</a>
+      </div>
+    </nav>
+    <header>
+      <div class="badge">Next-gen LPU Inference Engines</div>
+      <h1>Scale your models <br>at light speed. </h1>
+      <p class="subtext">The first sovereign AI infrastructure designed for trillion-parameter models. Dedicated H100 clusters with zero latency overhead.</p>
+      <div style="display: flex; gap: 20px;">
+        <button class="btn-primary" onclick="userLog('Main CTA Click')">Deploy Now</button>
+        <button class="btn-primary" style="background: transparent; border: 1px solid var(--border); color: white;" onclick="userLog('Secondary CTA Click')">View Specs</button>
+      </div>
+      <div id="status-msg"></div>
+    </header>
+    <section id="features" class="section-padding">
+      <h2 class="section-title">The Stack</h2>
+      <p class="section-sub">Engineered for the most demanding neural workloads.</p>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="userLog('Grid 1')">
+          <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+          <h3>Hyper-Inference</h3>
+          <p>Execute tokens at 450/sec using our proprietary liquid cooling orchestration.</p>
+        </div>
+        <div class="feature-card" onclick="userLog('Grid 2')">
+          <div style="font-size: 2rem; margin-bottom: 10px;">🛡️</div>
+          <h3>Sovereign Security</h3>
+          <p>Private VPC peering with end-to-end hardware encryption protocols.</p>
+        </div>
+        <div class="feature-card" onclick="userLog('Grid 3')">
+          <div style="font-size: 2rem; margin-bottom: 10px;">🌐</div>
+          <h3>Edge Presence</h3>
+          <p>Low-latency nodes in 45 global regions for real-time edge computing.</p>
+        </div>
+        <div class="feature-card">
+          <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
+          <h3>Auto-Scaling</h3>
+          <p>Dynamically scale clusters based on request volume. (Click here to do nothing).</p>
+        </div>
+      </div>
+    </section>
+    <section id="pricing" class="section-padding" style="background: #080808;">
+      <h2 class="section-title">Flexible Compute</h2>
+      <p class="section-sub">Predictable pricing for production-ready AI.</p>
+      <div class="pricing-table">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <div class="price-amount">$0 <span style="font-size: 1rem; color: var(--text-muted)">/mo</span>
+          </div>
+          <ul class="price-features">
+            <li>1 Shared GPU Node</li>
+            <li>100k Token Monthly Cap</li>
+            <li>Standard API Support</li>
+          </ul>
+          <button class="btn-primary" style="width:100%;" onclick="userLog('Free Plan Pick')">Select Plan</button>
+        </div>
+        <div class="price-card popular">
+          <h3>Developer</h3>
+          <div class="price-amount">$49 <span style="font-size: 1rem; color: var(--text-muted)">/mo</span>
+          </div>
+          <ul class="price-features">
+            <li>2 Dedicated L40S Nodes</li>
+            <li>Unlimited Tokens</li>
+            <li>Priority Processing</li>
+          </ul>
+          <button class="btn-primary" style="width:100%;" onclick="userLog('Pro Plan Pick')">Get Pro</button>
+        </div>
+        <div class="price-card">
+          <h3>Cluster</h3>
+          <div class="price-amount">$899 <span style="font-size: 1rem; color: var(--text-muted)">/mo</span>
+          </div>
+          <ul class="price-features">
+            <li>8x H100 Dedicated Cluster</li>
+            <li>SLA Guarantee</li>
+            <li>Custom Fine-tuning Pipeline</li>
+          </ul>
+          <button class="btn-primary" style="width:100%;" onclick="userLog('Enterprise Plan Pick')">Contact Sales</button>
+        </div>
+      </div>
+    </section>
+    <section id="contact" class="section-padding">
+      <div class="contact-container">
+        <h2 style="margin-bottom: 10px; text-align: center;">Reserve Your Cluster</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Speak with an infrastructure engineer.</p>
+        <form id="ai-form" onsubmit="return handleForm(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label>Work Email</label>
+            <input type="email" placeholder="john@company.ai" required>
+          </div>
+          <div class="form-group">
+            <label>Describe your workload</label>
+            <textarea rows="4" placeholder="Scaling Llama 3 for 1M users..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; background: var(--primary-cyan)">Send Request</button>
+        </form>
+      </div>
+    </section>
+    <footer>
+      <div>LUMINA NEXUS. POWERING THE FUTURE OF AGENTIC AI.</div>
+      <div style="display: flex; gap: 20px;">
+        <span style="cursor: help;" title="Fake Tooltip for Clarity">Status: Operational</span>
+        <a href="#">Privacy</a>
+        <a href="#">Security</a>
+      </div>
+    </footer>
+    <script>
+      // Visual feedback for interactions
+      function userLog(action) {
+        const display = document.getElementById('status-msg');
+        display.innerText = "Interpreting event: " + action;
+        display.style.color = "#50e3c2";
+        console.log("[Nexus-Telemetry]: " + action);
+        // You can also pass custom tags to Clarity manually
+        if (window.clarity) {
+          window.clarity("set", "LastInteraction", action);
+        }
+      }
+
+      function handleForm(e) {
+        e.preventDefault();
+        alert("Transmission Received. Our engineers will reach out shortly.");
+        userLog('Form Submitted Successfully');
+        return false;
+      }
+      // Navigation scroll effect
+      window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 100) {
+          nav.style.padding = "1rem 8%";
+          nav.style.background = "rgba(5, 5, 5, 0.95)";
+        } else {
+          nav.style.padding = "2rem 8%";
+          nav.style.background = "rgba(5, 5, 5, 0.8)";
+        }
+      });
+    </script>
+  </body>
+</html>
